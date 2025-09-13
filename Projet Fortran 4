@@ -1,0 +1,134 @@
+program matrices
+    implicit none
+    integer, parameter :: Nmax = 5
+    real :: M(Nmax, Nmax), N(Nmax, Nmax), P(Nmax, Nmax)
+    integer :: X(Nmax)
+    real :: Y(Nmax)
+    integer :: i, j
+    real :: traceM, sumM, traceN, sumN
+
+    ! Initialisation des matrices M et N
+    do i = 1, Nmax
+        do j = 1, Nmax
+            M(i, j) = i + (j * j)
+            N(i, j) = 2.0
+        end do
+    end do
+
+    ! Initialisation du vecteur X
+    do i = 1, Nmax
+        X(i) = i
+    end do
+
+    ! Affichage de la matrice M
+    print *, 'Matrice M:'
+    call display_matrice(M, Nmax, Nmax)
+
+    ! Affichage de la matrice N
+    print *, 'Matrice N:'
+    call display_matrice(N, Nmax, Nmax)
+
+    ! Affichage du vecteur X
+    print *, 'Vecteur X:'
+    call display_vecteur_int(X, Nmax)
+
+    ! Calcul et affichage de la trace et de la somme des éléments de M
+    traceM = trace_matrice(M, Nmax)
+    sumM = somme_elements(M, Nmax, Nmax)
+    print *, 'Trace de M:', traceM
+    print *, 'Somme des éléments de M:', sumM
+
+    ! Calcul et affichage de la trace et de la somme des éléments de N
+    traceN = trace_matrice(N, Nmax)
+    sumN = somme_elements(N, Nmax, Nmax)
+    print *, 'Trace de N:', traceN
+    print *, 'Somme des éléments de N:', sumN
+
+    ! Calcul et affichage du produit matriciel MN = P
+    call produit_matriciel(M, N, P, Nmax)
+    print *, 'Produit MN = P:'
+    call display_matrice(P, Nmax, Nmax)
+
+contains
+
+    subroutine display_matrice(mat, rows, cols)
+        real, intent(in) :: mat(rows, cols)
+        integer, intent(in) :: rows, cols
+        integer :: i, j
+
+        do i = 1, rows
+            do j = 1, cols
+                write(*, '(F6.2)', advance='no') mat(i, j)
+            end do
+            print *
+        end do
+    end subroutine display_matrice
+
+    subroutine display_vecteur_real(vec, size)
+        real, intent(in) :: vec(size)
+        integer, intent(in) :: size
+        integer :: i
+
+        do i = 1, size
+            write(*, '(F6.2)', advance='no') vec(i)
+        end do
+        print *
+    end subroutine display_vecteur_real
+
+    subroutine display_vecteur_int(vec, size)
+        integer, intent(in) :: vec(size)
+        integer, intent(in) :: size
+        integer :: i
+
+        do i = 1, size
+            write(*, '(I6)', advance='no') vec(i)
+        end do
+        print *
+    end subroutine display_vecteur_int
+
+    function trace_matrice(mat, size) result(trace)
+        real, intent(in) :: mat(size, size)
+        integer, intent(in) :: size
+        real :: trace
+        integer :: i
+
+        trace = 0.0
+        do i = 1, size
+            trace = trace + mat(i, i)
+        end do
+    end function trace_matrice
+
+    function somme_elements(mat, rows, cols) result(sum)
+        real, intent(in) :: mat(rows, cols)
+        integer, intent(in) :: rows, cols
+        real :: sum
+        integer :: i, j
+
+        sum = 0.0
+        do i = 1, rows
+            do j = 1, cols
+                sum = sum + mat(i, j)
+            end do
+        end do
+    end function somme_elements
+
+    subroutine produit_matriciel(A, B, C, size)
+        real, intent(in) :: A(:,:), B(:,:)
+        real, intent(out) :: C(:,:)
+        integer, intent(in) :: size
+        integer :: i, j, k
+
+        ! Initialiser C à zéro
+        C = 0.0
+
+        ! Effectuer le produit matriciel
+        do i = 1, size
+            do j = 1, size
+                do k = 1, size
+                    C(i, j) = C(i, j) + A(i, k) * B(k, j)
+                end do
+            end do
+        end do
+    end subroutine produit_matriciel
+
+end program matrices
